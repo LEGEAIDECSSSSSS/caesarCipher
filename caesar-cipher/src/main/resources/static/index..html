@@ -81,33 +81,11 @@
             <!-- Form -->
             <form id="encryption-form">
 
-                <!-- Mode toggle -->
-                <div class="mode-toggle" role="group" aria-label="Mode">
-                    <button
-                        type="button"
-                        class="mode-button active"
-                        id="mode-encrypt"
-                        data-mode="encrypt"
-                        aria-pressed="true"
-                    >
-                        Encrypt
-                    </button>
-                    <button
-                        type="button"
-                        class="mode-button"
-                        id="mode-decrypt"
-                        data-mode="decrypt"
-                        aria-pressed="false"
-                    >
-                        Decrypt
-                    </button>
-                </div>
-
                 <!-- Password / text -->
                 <div class="form-group">
 
                     <div class="label-row">
-                        <label for="password" id="input-label">Text to encrypt</label>
+                        <label for="password">Text to encrypt</label>
                         <span class="character-count" id="character-count">
                             0 characters
                         </span>
@@ -141,7 +119,7 @@
 
                     <div class="label-row">
                         <label for="shift">Shift amount</label>
-                        <span class="shift-info" id="shift-info">A → B = shift of 1</span>
+                        <span class="shift-info">A → B = shift of 1</span>
                     </div>
 
                     <div class="shift-input-container">
@@ -211,7 +189,7 @@
                         class="primary-button"
                         id="encrypt-button"
                     >
-                        <span id="submit-label">Encrypt Text</span>
+                        <span>Encrypt Text</span>
                         <span class="button-arrow">→</span>
                     </button>
 
@@ -232,8 +210,8 @@
                 <div class="result-header">
 
                     <div>
-                        <p class="eyebrow" id="result-eyebrow">ENCRYPTED OUTPUT</p>
-                        <h3 id="result-title">Your encrypted text</h3>
+                        <p class="eyebrow">ENCRYPTED OUTPUT</p>
+                        <h3>Your encrypted text</h3>
                     </div>
 
                     <button

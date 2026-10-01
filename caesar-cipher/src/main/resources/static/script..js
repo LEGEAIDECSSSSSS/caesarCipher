@@ -1,31 +1,5 @@
-// Same server serves the page and the API, so relative URLs are enough.
-const ENDPOINTS = {
-    encrypt: "/api/encrypt",
-    decrypt: "/api/decrypt",
-};
-
-const LABELS = {
-    encrypt: {
-        input: "Text to encrypt",
-        placeholder: "Enter the text you want to encrypt...",
-        submit: "Encrypt Text",
-        eyebrow: "ENCRYPTED OUTPUT",
-        title: "Your encrypted text",
-        emptyTitle: "Your encrypted text will appear here",
-        emptyHint: "Enter some text above and click Encrypt Text",
-        shiftInfo: "A → B = shift of 1",
-    },
-    decrypt: {
-        input: "Text to decrypt",
-        placeholder: "Paste the encrypted text you want to decrypt...",
-        submit: "Decrypt Text",
-        eyebrow: "DECRYPTED OUTPUT",
-        title: "Your decrypted text",
-        emptyTitle: "Your decrypted text will appear here",
-        emptyHint: "Enter the encrypted text and the shift used, then click Decrypt Text",
-        shiftInfo: "B → A = shift of 1",
-    },
-};
+// Same server serves the page and the API, so a relative URL is enough.
+const API_URL = "/api/encrypt";
 
 const form = document.getElementById("encryption-form");
 const textInput = document.getElementById("password");
@@ -38,26 +12,15 @@ const copyLabel = document.getElementById("copy-label");
 const decreaseButton = document.getElementById("decrease-shift");
 const increaseButton = document.getElementById("increase-shift");
 const placeholder = document.getElementById("result-placeholder");
-const placeholderTitle = placeholder.querySelector("p");
-const placeholderHint = placeholder.querySelector("span");
 const resultText = document.getElementById("encrypted-result");
 const visualShift = document.getElementById("visual-shift");
 const originalLetters = document.getElementById("original-letters");
 const shiftedLetters = document.getElementById("shifted-letters");
 
-const inputLabel = document.getElementById("input-label");
-const submitLabel = document.getElementById("submit-label");
-const resultEyebrow = document.getElementById("result-eyebrow");
-const resultTitle = document.getElementById("result-title");
-const shiftInfo = document.getElementById("shift-info");
-const modeButtons = document.querySelectorAll(".mode-button");
-
 const MIN_SHIFT = 0;
 const MAX_SHIFT = 25;
 const A_CODE = 65;
 const VISIBLE_LETTERS = 13;
-
-let mode = "encrypt";
 
 /* ---------- Helpers ---------- */
 
@@ -75,8 +38,6 @@ function setShift(value) {
 
 function renderAlphabet() {
     const shift = getShift();
-    // Decrypting moves letters backward, so the visualization flips direction.
-    const direction = mode === "encrypt" ? 1 : -1;
     visualShift.textContent = shift;
 
     originalLetters.innerHTML = "";
@@ -88,8 +49,7 @@ function renderAlphabet() {
         originalLetters.appendChild(original);
 
         const shifted = document.createElement("span");
-        const index = (((i + direction * shift) % 26) + 26) % 26;
-        shifted.textContent = String.fromCharCode(A_CODE + index);
+        shifted.textContent = String.fromCharCode(A_CODE + ((i + shift) % 26));
         shiftedLetters.appendChild(shifted);
     }
 }
@@ -108,35 +68,7 @@ function resetResult() {
     copyButton.disabled = true;
 }
 
-function setMode(newMode) {
-    mode = newMode;
-    const labels = LABELS[mode];
-
-    modeButtons.forEach((button) => {
-        const active = button.dataset.mode === mode;
-        button.classList.toggle("active", active);
-        button.setAttribute("aria-pressed", String(active));
-    });
-
-    inputLabel.textContent = labels.input;
-    textInput.placeholder = labels.placeholder;
-    submitLabel.textContent = labels.submit;
-    resultEyebrow.textContent = labels.eyebrow;
-    resultTitle.textContent = labels.title;
-    placeholderTitle.textContent = labels.emptyTitle;
-    placeholderHint.textContent = labels.emptyHint;
-    shiftInfo.textContent = labels.shiftInfo;
-
-    // Clear any old output so it isn't mistaken for the other mode's result.
-    resetResult();
-    renderAlphabet();
-}
-
 /* ---------- Events ---------- */
-
-modeButtons.forEach((button) => {
-    button.addEventListener("click", () => setMode(button.dataset.mode));
-});
 
 textInput.addEventListener("input", () => {
     const count = textInput.value.length;
@@ -154,7 +86,7 @@ form.addEventListener("submit", async (event) => {
     encryptButton.disabled = true;
 
     try {
-        const response = await fetch(ENDPOINTS[mode], {
+        const response = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text: textInput.value, shift: getShift() }),
@@ -168,7 +100,7 @@ form.addEventListener("submit", async (event) => {
         showResult(data.result);
     } catch (error) {
         console.error(error);
-        showResult("Could not reach the server. Make sure it is running and try again.", true);
+        showResult("Could not reach the encryption server. Make sure it is running and try again.", true);
     } finally {
         encryptButton.disabled = false;
     }
@@ -193,4 +125,4 @@ copyButton.addEventListener("click", async () => {
     }
 });
 
-setMode("encrypt");
+renderAlphabet();

@@ -17,11 +17,4 @@ public class CaesarCipherController {
         String result = CaesarCipherEncryption.encryption(request.text(), request.shift());
         return new EncryptResponse(result);
     }
-
-    // POST /api/decrypt   body: {"text": "Khoor", "shift": 3}
-    @PostMapping("/decrypt")
-    public EncryptResponse decrypt(@Valid @RequestBody EncryptRequest request) {
-        String result = CaesarCipherEncryption.decryption(request.text(), request.shift());
-        return new EncryptResponse(result);
-    }
 }

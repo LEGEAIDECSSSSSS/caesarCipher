@@ -3,8 +3,8 @@ package com.example.caesar;
 public class CaesarCipherEncryption {
 
     /**
-     * Encrypts text with a Caesar cipher. Letters are shifted forward (wrapping
-     * around the alphabet); non-letters are left unchanged.
+     * Encrypts text with a Caesar cipher. Letters are shifted (wrapping around
+     * the alphabet); non-letters are left unchanged.
      */
     public static String encryption(String password, int shift) {
 
@@ -32,13 +32,5 @@ public class CaesarCipherEncryption {
         }
 
         return encryptedPassword.toString();
-    }
-
-    /**
-     * Decrypts text that was encrypted with the same shift. Decrypting is just
-     * shifting backward by the same amount.
-     */
-    public static String decryption(String text, int shift) {
-        return encryption(text, -shift);
     }
 }
